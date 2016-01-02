@@ -9,5 +9,18 @@ namespace BudgetAnalyzer.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+            : base()
+        {
+            Accounts = new List<BankAccount>();
+        }
+
+        public ApplicationUser(string userName)
+            : base(userName)
+        {
+            Accounts = new List<BankAccount>();
+        }
+
+        public ICollection<BankAccount> Accounts { get; set; }
     }
 }
