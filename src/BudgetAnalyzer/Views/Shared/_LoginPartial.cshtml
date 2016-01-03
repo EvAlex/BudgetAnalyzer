@@ -4,9 +4,21 @@
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-controller="Manage" asp-action="Index" title="Manage">Hello @User.GetUserName()!</a>
-            </li>
+            @functions {
+                string ActiveAt(string controller)
+                {
+                    string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+                    string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+                    return controller == currentController ? "active" : "";
+                }
+                string ActiveAt(string controller, string action)
+                {
+                    string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+                    string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+                    return controller == currentController && action == currentAction ? "active" : "";
+                }
+            }
+            <nav-link asp-controller="Manage" asp-action="Index">Hello @User.GetUserName()!</nav-link>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button>
             </li>
@@ -16,7 +28,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
+        <nav-link asp-controller="Account" asp-action="Register">Register</nav-link>
+        <nav-link asp-controller="Account" asp-action="Login">Log in</nav-link>
     </ul>
 }

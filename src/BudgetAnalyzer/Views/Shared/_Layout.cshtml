@@ -29,10 +29,24 @@
                     <a asp-controller="Home" asp-action="Index" class="navbar-brand">BudgetAnalyzer</a>
                 </div>
                 <div class="navbar-collapse collapse">
+                    @functions {
+                        string ActiveAt(string controller)
+                        {
+                            string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+                            string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+                            return controller == currentController ? "active" : "";
+                        }
+                        string ActiveAt(string controller, string action)
+                        {
+                            string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+                            string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+                            return controller == currentController && action == currentAction ? "active" : "";
+                        }
+                    }
                     <ul class="nav navbar-nav">
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <nav-link asp-controller="Home" asp-action="Index">Index</nav-link>
+                        <nav-link asp-controller="Home" asp-action="About">About</nav-link>
+                        <nav-link asp-controller="Home" asp-action="Contact">Contact</nav-link>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
