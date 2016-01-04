@@ -1,22 +1,29 @@
 @model BudgetAnalyzer.Models.BankAccount
+@using System.Security.Claims
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Bank Account";
 }
 
-<h2>Edit</h2>
+<h2>Edit Bank Account</h2>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>BankAccount</h4>
+        <h4>Bank Account</h4>
         <hr />
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UserId" value="@User.GetUserId()" />
         <div class="form-group">
-            <label asp-for="BankId" class="control-label col-md-2">BankId</label>
-            <div class="col-md-10">
-                <select asp-for="BankId" class="form-control" />
+            <label asp-for="BankId" class="control-label col-md-2"></label>
+            <div class="col-md-4">
+                <select asp-for="BankId" class="form-control" >
+                    <option value="">-- Not specified --</option>
+                </select>
                 <span asp-validation-for="BankId" class="text-danger" />
+            </div>
+            <div class="col-md-6">
+                <h4>No your bank in list? <a asp-controller="Banks" asp-action="Create">Create it</a>.</h4>
             </div>
         </div>
         <div class="form-group">
@@ -29,15 +36,8 @@
         <div class="form-group">
             <label asp-for="Type" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="Type" class="form-control"></select>
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<BankAccountType>()" class="form-control"></select>
                 <span asp-validation-for="Type" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="UserId" class="control-label col-md-2">UserId</label>
-            <div class="col-md-10">
-                <select asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
