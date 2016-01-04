@@ -45,8 +45,7 @@ namespace BudgetAnalyzer.Controllers
         // GET: BankAccounts/Create
         public IActionResult Create()
         {
-            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Bank");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "User");
+            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Name");
             return View();
         }
 
@@ -61,8 +60,7 @@ namespace BudgetAnalyzer.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Bank", bankAccount.BankId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "User", bankAccount.UserId);
+            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Name", bankAccount.BankId);
             return View(bankAccount);
         }
 
@@ -79,8 +77,7 @@ namespace BudgetAnalyzer.Controllers
             {
                 return HttpNotFound();
             }
-            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Bank", bankAccount.BankId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "User", bankAccount.UserId);
+            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Name", bankAccount.BankId);
             return View(bankAccount);
         }
 
@@ -95,8 +92,7 @@ namespace BudgetAnalyzer.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Bank", bankAccount.BankId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "User", bankAccount.UserId);
+            ViewData["BankId"] = new SelectList(_context.Banks, "Id", "Name", bankAccount.BankId);
             return View(bankAccount);
         }
 

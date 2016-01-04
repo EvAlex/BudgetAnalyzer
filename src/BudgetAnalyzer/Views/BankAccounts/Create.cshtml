@@ -15,10 +15,13 @@
         <input asp-for="UserId" type="hidden" value="@User.GetUserId()" />
         <div class="form-group">
             <label asp-for="BankId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="BankId" class="form-control">
+            <div class="col-md-4">
+                <select asp-for="BankId" asp-items="@(ViewData["BankId"] as SelectList)" class="form-control">
                     <option value="">-- Not specified --</option>
                 </select>
+            </div>
+            <div class="col-md-6">
+                <h4>No your bank in list? <a asp-controller="Banks" asp-action="Create">Create it</a>.</h4>
             </div>
         </div>
         <div class="form-group">
