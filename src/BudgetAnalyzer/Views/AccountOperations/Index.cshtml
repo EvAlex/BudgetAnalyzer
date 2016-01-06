@@ -33,6 +33,9 @@
         <th>
             @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Time)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Statement)
+        </th>
         <th></th>
     </tr>
     
@@ -49,6 +52,12 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Time)
+        </td>
+        <td>
+            @if (item.StatementId.HasValue)
+            {
+                <a asp-controller="AccountStatements" asp-action="Details" asp-route-id="@item.StatementId">Statement #@item.StatementId</a>
+            }
         </td>
         <td>
             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
