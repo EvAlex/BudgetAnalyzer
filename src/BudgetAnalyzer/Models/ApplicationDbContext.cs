@@ -36,6 +36,11 @@ namespace BudgetAnalyzer.Models
                 .HasOne(e => e.CorrespondentAccount)
                 .WithMany(e => e.CorrespondentOperations)
                 .HasForeignKey(e => e.CorrespondentAccountId);
+
+            builder.Entity<AccountStatement>().ToTable("AccountStatements");
+
+            builder.Entity<FileUpload>().ToTable("FileUploads");
+
         }
 
         public DbSet<Bank> Banks { get; set; }
