@@ -1,0 +1,53 @@
+@model BudgetAnalyzer.Models.AccountStatement
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/BankAccounts/Details.cshtml";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>AccountStatement</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="BankAccountId" class="control-label col-md-2">BankAccountId</label>
+            <div class="col-md-10">
+                <select asp-for="BankAccountId" class="form-control" />
+                <span asp-validation-for="BankAccountId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FileUploadId" class="control-label col-md-2">FileUploadId</label>
+            <div class="col-md-10">
+                <select asp-for="FileUploadId" class="form-control" />
+                <span asp-validation-for="FileUploadId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProcessedAt" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ProcessedAt" class="form-control" />
+                <span asp-validation-for="ProcessedAt" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -7,9 +7,13 @@ using BudgetAnalyzer.Models;
 using Microsoft.AspNet.Http;
 using BudgetAnalyzer.ViewModels;
 using System;
+using Microsoft.AspNet.Authorization;
+using System.Security.Claims;
+using BudgetAnalyzer.ViewModels.AccountOperations;
 
 namespace BudgetAnalyzer.Controllers
 {
+    [Authorize]
     public class AccountOperationsController : Controller
     {
         private ApplicationDbContext _context;
@@ -20,10 +24,26 @@ namespace BudgetAnalyzer.Controllers
         }
 
         // GET: AccountOperations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? accountId = null)
         {
-            var applicationDbContext = _context.AccountOperations.Include(a => a.Account).Include(a => a.CorrespondentAccount);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = User.GetUserId();
+            var allAccounts = _context.BankAccounts.Where(a => a.UserId == userId);
+            var currentAccount = accountId.HasValue
+                ? await allAccounts.FirstAsync(a => a.Id == accountId.Value)
+                : await allAccounts.FirstOrDefaultAsync();
+            var currentAccountOperations = currentAccount == null
+                ? new AccountOperation[0]
+                : await _context.AccountOperations
+                    .Where(o => o.AccountId == currentAccount.Id)
+                    .Include(a => a.Account)
+                    .Include(a => a.CorrespondentAccount)
+                    .ToArrayAsync();
+            return View(new AccountOperationsIndexViewModel
+            {
+                 Accounts = await allAccounts.ToArrayAsync(),
+                 CurrentAccount = currentAccount,
+                 CurrentAccountOperations = currentAccountOperations
+            });
         }
 
         // GET: AccountOperations/Details/5
@@ -39,6 +59,8 @@ namespace BudgetAnalyzer.Controllers
             {
                 return HttpNotFound();
             }
+            if (accountOperation.Account.UserId != User.GetUserId())
+                return HttpNotFound("AccountOperation with specified Id doen't exist. Or does it? Maybe it belongs to someone else? Who knows...");
 
             return View(accountOperation);
         }

@@ -1,10 +1,20 @@
-@model IEnumerable<BudgetAnalyzer.Models.AccountOperation>
+@model BudgetAnalyzer.ViewModels.AccountOperations.AccountOperationsIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Account Operations";
 }
 
-<h2>Index</h2>
+<ul class="nav nav-pills" role="tablist">
+    @foreach (var acc in Model.Accounts)
+    {
+        string active = acc.Id == Model.CurrentAccount.Id ? "active" : "";
+        <li role="presentation" class="@active"><a asp-action="Index" asp-route-account-id="@acc.Id">@acc.Name</a></li>
+    }
+</ul>
+
+@{await Html.RenderPartialAsync("_BankAccountDetailsSummary", Model.CurrentAccount);}
+
+<h2>Account Operations</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,21 +22,21 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Ammount)
+            @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Ammount)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Saldo)
+            @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Saldo)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Time)
+            @Html.DisplayNameFor(model => model.CurrentAccountOperations.First().Time)
         </th>
         <th></th>
     </tr>
     
-@foreach (var item in Model) {
+@foreach (var item in Model.CurrentAccountOperations) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Ammount)
