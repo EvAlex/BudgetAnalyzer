@@ -11,11 +11,11 @@ namespace BudgetAnalyzer.Models
 
         public int AccountId { get; set; }
 
-        public BankAccount Account { get; set; }
+        public virtual BankAccount Account { get; set; }
 
         public int CorrespondentAccountId { get; set; }
 
-        public BankAccount CorrespondentAccount { get; set; }
+        public virtual BankAccount CorrespondentAccount { get; set; }
 
         public double Ammount { get; set; }
 
@@ -24,5 +24,9 @@ namespace BudgetAnalyzer.Models
         public string Name { get; set; }
 
         public double Saldo { get; set; }
+
+        public int? StatementId { get; set; }
+
+        public virtual AccountStatement Statement { get; set; }
     }
 }

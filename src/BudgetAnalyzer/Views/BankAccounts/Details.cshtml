@@ -28,3 +28,53 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </p>
+
+<hr />
+
+<h3>Account Operations History</h3>
+
+@if (Model.Operations.Any())
+{
+    <div class="row">
+        @{
+            var operations = Model.Operations.OrderByDescending(o => o.Time);
+            var operationsGroups = operations.GroupBy(o => o.Time.Date);
+        }
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Saldo</th>
+                    <th>Category/Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var g in operationsGroups)
+                {
+                    <tr>
+                        <td colspan="100">
+                            <span>@g.Key.ToLongDateString()</span>
+                        </td>
+                    </tr>
+                    @foreach (var op in g)
+                    {
+                        <tr>
+                            <td>@op.Time.ToShortTimeString()</td>
+                            <td>@(op.Ammount > 0 ? op.Ammount.ToString() : "")</td>
+                            <td>@(op.Ammount < 0 ? op.Ammount.ToString() : "")</td>
+                            <td>@op.Saldo</td>
+                            <td>@op.Name</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else 
+{
+    <p>No operations yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
+}
+

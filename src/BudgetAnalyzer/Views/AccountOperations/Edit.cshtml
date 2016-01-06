@@ -1,0 +1,73 @@
+@model BudgetAnalyzer.Models.AccountOperation
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>AccountOperation</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="AccountId" class="control-label col-md-2">AccountId</label>
+            <div class="col-md-10">
+                <select asp-for="AccountId" class="form-control" />
+                <span asp-validation-for="AccountId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Ammount" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Ammount" class="form-control" />
+                <span asp-validation-for="Ammount" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CorrespondentAccountId" class="control-label col-md-2">CorrespondentAccountId</label>
+            <div class="col-md-10">
+                <select asp-for="CorrespondentAccountId" class="form-control" />
+                <span asp-validation-for="CorrespondentAccountId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Saldo" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Saldo" class="form-control" />
+                <span asp-validation-for="Saldo" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Time" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Time" class="form-control" />
+                <span asp-validation-for="Time" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

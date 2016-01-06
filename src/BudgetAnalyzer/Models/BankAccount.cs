@@ -18,19 +18,19 @@ namespace BudgetAnalyzer.Models
 
         public string UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [Display(Name = "Bank")]
         public int? BankId { get; set; }
 
-        public Bank Bank { get; set; }
+        public virtual Bank Bank { get; set; }
 
         public BankAccountType Type { get; set; }
 
         public string Name { get; set; }
 
-        public ICollection<AccountOperation> Operations { get; set; }
+        public virtual ICollection<AccountOperation> Operations { get; set; }
 
-        public ICollection<AccountOperation> CorrespondentOperations { get; set; }
+        public virtual ICollection<AccountOperation> CorrespondentOperations { get; set; }
     }
 }

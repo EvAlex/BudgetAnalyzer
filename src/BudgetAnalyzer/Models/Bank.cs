@@ -16,6 +16,6 @@ namespace BudgetAnalyzer.Models
 
         public string Name { get; set; }
 
-        public ICollection<BankAccount> Accounts { get; set; }
+        public virtual ICollection<BankAccount> Accounts { get; set; }
     }
 }
