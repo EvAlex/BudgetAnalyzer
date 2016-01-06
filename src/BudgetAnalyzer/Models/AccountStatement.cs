@@ -23,5 +23,7 @@ namespace BudgetAnalyzer.Models
         public int FileUploadId { get; set; }
 
         public virtual FileUpload FileUpload { get; set; }
+
+        public DateTimeOffset? ProcessedAt { get; set; }
     }
 }

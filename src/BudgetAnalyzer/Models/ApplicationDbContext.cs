@@ -69,7 +69,8 @@ namespace BudgetAnalyzer.Models
                 {
                     Content = buffer,
                     ContentType = file.ContentType,
-                    FileName = filename
+                    FileName = filename,
+                    CreatedAt = DateTimeOffset.Now
                 };
                 FileUploads.Add(upload);
                 await SaveChangesAsync();
