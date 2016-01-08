@@ -66,7 +66,7 @@ namespace BudgetAnalyzer.TagHelpers
             else if (classAttr.Value == null || classAttr.Value.ToString().IndexOf("active") < 0)
             {
                 classAttr.Value = classAttr.Value == null
-                    ? "value"
+                    ? "active"
                     : classAttr.Value.ToString() + " active";
             }
         }
