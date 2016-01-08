@@ -1,4 +1,5 @@
-@model BudgetAnalyzer.Models.BankAccount
+@model BudgetAnalyzer.ViewModels.BankAccounts.BankAccountDetailsViewModel
+@using BudgetAnalyzer.ViewModels.BankAccounts
 
 @{
     ViewData["Title"] = "Bank Account Details";
@@ -11,70 +12,106 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Account.Name)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Account.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Type)
+            @Html.DisplayNameFor(model => model.Account.Type)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Type)
+            @Html.DisplayFor(model => model.Account.Type)
         </dd>
     </dl>
 </div>
 <p>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Account.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </p>
 
 <hr />
 
-<h3>Account Operations History</h3>
+<div>
+    @{
+        string operationsTabActive = Model.ActiveTab == BankAccountDetailsTab.AccountOperations ? "active" : "";
+        string statementsTabActive = Model.ActiveTab == BankAccountDetailsTab.UploadedStatements ? "active" : "";
+    }
 
-@if (Model.Operations.Any())
-{
-    <div class="row">
-        @{
-            var operations = Model.Operations.OrderByDescending(o => o.Time);
-            var operationsGroups = operations.GroupBy(o => o.Time.Date);
-        }
-        <table class="table table-condensed table-striped">
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                    <th>Saldo</th>
-                    <th>Category/Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var g in operationsGroups)
-                {
-                    <tr>
-                        <td colspan="100">
-                            <span>@g.Key.ToLongDateString()</span>
-                        </td>
-                    </tr>
-                    @foreach (var op in g)
-                    {
-                        <tr>
-                            <td>@op.Time.ToShortTimeString()</td>
-                            <td>@(op.Ammount > 0 ? op.Ammount.ToString() : "")</td>
-                            <td>@(op.Ammount < 0 ? op.Ammount.ToString() : "")</td>
-                            <td>@op.Saldo</td>
-                            <td>@op.Name</td>
-                        </tr>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="@operationsTabActive">
+            <a asp-route-tab="@BankAccountDetailsTab.AccountOperations" role="tab">Account Operations</a>
+        </li>
+        <li role="presentation" class="@statementsTabActive">
+            <a asp-route-tab="@BankAccountDetailsTab.UploadedStatements" role="tab">Uploaded Statements</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane @operationsTabActive" id="home">
+            @if (Model.Account.Operations.Any())
+            {
+                <div class="row">
+                    @{
+                        var operations = Model.Account.Operations.OrderByDescending(o => o.Time);
+                        var operationsGroups = operations.GroupBy(o => o.Time.Date);
                     }
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Saldo</th>
+                                <th>Category/Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var g in operationsGroups)
+                            {
+                                <tr>
+                                    <td colspan="100">
+                                        <span>@g.Key.ToLongDateString()</span>
+                                    </td>
+                                </tr>
+                                @foreach (var op in g)
+                                {
+                                    <tr>
+                                        <td>@op.Time.ToShortTimeString()</td>
+                                        <td>@(op.Ammount > 0 ? op.Ammount.ToString() : "")</td>
+                                        <td>@(op.Ammount < 0 ? op.Ammount.ToString() : "")</td>
+                                        <td>@op.Saldo</td>
+                                        <td>@op.Name</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>No operations yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane @statementsTabActive">
+            @if (Model.Statements != null && Model.Statements.Any())
+            {
+                <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a>
+                @foreach (var s in Model.Statements)
+                {
+                    <span>#@s.Id</span>
                 }
-            </tbody>
-        </table>
+            }
+            else
+            {
+                <p>No statements yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
+            }
+        </div>
     </div>
-}
-else 
-{
-    <p>No operations yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
-}
+
+</div>
+
 

@@ -5,6 +5,8 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using BudgetAnalyzer.Models;
 using Microsoft.AspNet.Authorization;
+using BudgetAnalyzer.ViewModels.BankAccounts;
+using System.Security.Claims;
 
 namespace BudgetAnalyzer.Controllers
 {
@@ -26,20 +28,29 @@ namespace BudgetAnalyzer.Controllers
         }
 
         // GET: BankAccounts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, BankAccountDetailsTab tab = BankAccountDetailsTab.AccountOperations)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
 
-            BankAccount bankAccount = await _context.BankAccounts.SingleAsync(m => m.Id == id);
+            var userId = User.GetUserId();
+            BankAccount bankAccount = await _context.BankAccounts
+                .Include(a => a.Operations)
+                .SingleAsync(m => m.Id == id && m.UserId == userId);
             if (bankAccount == null)
             {
                 return HttpNotFound();
             }
 
-            return View(bankAccount);
+            var statements = tab == BankAccountDetailsTab.UploadedStatements
+                ? await _context.AccountStatements.Where(s => s.BankAccountId == bankAccount.Id).ToArrayAsync()
+                : null;
+
+            var viewModel = new BankAccountDetailsViewModel(bankAccount, tab, statements);
+
+            return View(viewModel);
         }
 
         // GET: BankAccounts/Create
