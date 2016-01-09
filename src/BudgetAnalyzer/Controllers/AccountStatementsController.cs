@@ -4,22 +4,30 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using BudgetAnalyzer.Models;
+using BudgetAnalyzer.ViewModels.AccountStatements;
+using System;
+using BudgetAnalyzer.Services;
 
 namespace BudgetAnalyzer.Controllers
 {
     public class AccountStatementsController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
 
-        public AccountStatementsController(ApplicationDbContext context)
+        private readonly IBankAccountStatementProcessor statementProcessor;
+
+        public AccountStatementsController(
+            ApplicationDbContext context,
+            IBankAccountStatementProcessor statementProcessor)
         {
-            _context = context;    
+            this.context = context;
+            this.statementProcessor = statementProcessor;
         }
 
         // GET: AccountStatements
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.AccountStatements.Include(a => a.BankAccount).Include(a => a.FileUpload);
+            var applicationDbContext = context.AccountStatements.Include(a => a.BankAccount).Include(a => a.FileUpload);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -31,7 +39,7 @@ namespace BudgetAnalyzer.Controllers
                 return HttpNotFound();
             }
 
-            AccountStatement accountStatement = await _context.AccountStatements.SingleAsync(m => m.Id == id);
+            AccountStatement accountStatement = await context.AccountStatements.SingleAsync(m => m.Id == id);
             if (accountStatement == null)
             {
                 return HttpNotFound();
@@ -43,30 +51,42 @@ namespace BudgetAnalyzer.Controllers
         // GET: AccountStatements/Create
         public IActionResult Create(int? accountId = null)
         {
-            var statement = new AccountStatement();
-            if (accountId.HasValue)
-            {
-                statement.BankAccountId = accountId.Value;
-            }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Name");
-            ViewData["FileUploadId"] = new SelectList(_context.FileUploads, "Id", "FileUpload");
-            return View(statement);
+            var viewModel = new AccountStatementViewModel { BankAccountId = accountId };
+            ViewData["BankAccountId"] = new SelectList(context.BankAccounts, "Id", "Name");
+            return View(viewModel);
         }
 
         // POST: AccountStatements/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AccountStatement accountStatement)
+        public async Task<IActionResult> Create(AccountStatementViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.AccountStatements.Add(accountStatement);
-                await _context.SaveChangesAsync();
+                IFileUpload upload;
+                try
+                {
+                    upload = await context.SaveFileUploadAsync(model.Attachment);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Failed to save uploaded file. Please upload it again later.", ex);
+                }
+                var statement = new AccountStatement
+                {
+                    BankAccountId = model.BankAccountId.Value,
+                    FileUploadId = upload.Id,
+                    ProcessedAt = DateTimeOffset.Now
+                };
+                context.AccountStatements.Add(statement);
+                await context.SaveChangesAsync();
+
+                statementProcessor.StartProcessing(statement.Id);
+
                 return RedirectToAction("Index");
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "BankAccount", accountStatement.BankAccountId);
-            ViewData["FileUploadId"] = new SelectList(_context.FileUploads, "Id", "FileUpload", accountStatement.FileUploadId);
-            return View(accountStatement);
+            ViewData["BankAccountId"] = new SelectList(context.BankAccounts, "Id", "Name", model.BankAccountId);
+            return View(model);
         }
 
         // GET: AccountStatements/Edit/5
@@ -77,13 +97,13 @@ namespace BudgetAnalyzer.Controllers
                 return HttpNotFound();
             }
 
-            AccountStatement accountStatement = await _context.AccountStatements.SingleAsync(m => m.Id == id);
+            AccountStatement accountStatement = await context.AccountStatements.SingleAsync(m => m.Id == id);
             if (accountStatement == null)
             {
                 return HttpNotFound();
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "BankAccount", accountStatement.BankAccountId);
-            ViewData["FileUploadId"] = new SelectList(_context.FileUploads, "Id", "FileUpload", accountStatement.FileUploadId);
+            ViewData["BankAccountId"] = new SelectList(context.BankAccounts, "Id", "BankAccount", accountStatement.BankAccountId);
+            ViewData["FileUploadId"] = new SelectList(context.FileUploads, "Id", "FileUpload", accountStatement.FileUploadId);
             return View(accountStatement);
         }
 
@@ -94,12 +114,12 @@ namespace BudgetAnalyzer.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Update(accountStatement);
-                await _context.SaveChangesAsync();
+                context.Update(accountStatement);
+                await context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "BankAccount", accountStatement.BankAccountId);
-            ViewData["FileUploadId"] = new SelectList(_context.FileUploads, "Id", "FileUpload", accountStatement.FileUploadId);
+            ViewData["BankAccountId"] = new SelectList(context.BankAccounts, "Id", "BankAccount", accountStatement.BankAccountId);
+            ViewData["FileUploadId"] = new SelectList(context.FileUploads, "Id", "FileUpload", accountStatement.FileUploadId);
             return View(accountStatement);
         }
 
@@ -112,7 +132,7 @@ namespace BudgetAnalyzer.Controllers
                 return HttpNotFound();
             }
 
-            AccountStatement accountStatement = await _context.AccountStatements.SingleAsync(m => m.Id == id);
+            AccountStatement accountStatement = await context.AccountStatements.SingleAsync(m => m.Id == id);
             if (accountStatement == null)
             {
                 return HttpNotFound();
@@ -126,9 +146,9 @@ namespace BudgetAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            AccountStatement accountStatement = await _context.AccountStatements.SingleAsync(m => m.Id == id);
-            _context.AccountStatements.Remove(accountStatement);
-            await _context.SaveChangesAsync();
+            AccountStatement accountStatement = await context.AccountStatements.SingleAsync(m => m.Id == id);
+            context.AccountStatements.Remove(accountStatement);
+            await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }
