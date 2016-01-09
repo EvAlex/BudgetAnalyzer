@@ -1,0 +1,21 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "BudgetAnalyzer.Tests Class Library",
+    "authors": [ "Alexander" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-rc1-build204"
+    },
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "frameworks": {
+        "dnx451": { },
+        "dnxcore50": { }
+    }
+}
