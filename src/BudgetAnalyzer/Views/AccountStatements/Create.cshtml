@@ -2,20 +2,19 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/BankAccounts/Details.cshtml";
 }
 
 <h2>Create</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>AccountStatement</h4>
+        <h4>Account Statement</h4>
         <hr />
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="BankAccountId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="BankAccountId" class ="form-control"></select>
+                <select asp-for="BankAccountId" asp-items="@(ViewData["BankAccountId"] as SelectList)" class ="form-control"></select>
             </div>
         </div>
         <div class="form-group">

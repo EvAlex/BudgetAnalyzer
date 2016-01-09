@@ -41,11 +41,16 @@ namespace BudgetAnalyzer.Controllers
         }
 
         // GET: AccountStatements/Create
-        public IActionResult Create()
+        public IActionResult Create(int? accountId = null)
         {
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "BankAccount");
+            var statement = new AccountStatement();
+            if (accountId.HasValue)
+            {
+                statement.BankAccountId = accountId.Value;
+            }
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Name");
             ViewData["FileUploadId"] = new SelectList(_context.FileUploads, "Id", "FileUpload");
-            return View();
+            return View(statement);
         }
 
         // POST: AccountStatements/Create

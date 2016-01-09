@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace BudgetAnalyzer.Models
 
         public int Id { get; set; }
 
+        [Display(Name = "Bank Account")]
         public int BankAccountId { get; set; }
 
         public virtual BankAccount BankAccount { get; set; }

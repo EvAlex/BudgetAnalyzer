@@ -93,13 +93,24 @@
             }
             else
             {
-                <p>No operations yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
+                <p>
+                    No operations yet. 
+                    <a asp-controller="AccountStatements"
+                       asp-action="Create"
+                       asp-route-accountId="@Model.Account.Id">
+                        Upload Bank Account Statement
+                    </a>
+                </p>
             }
         </div>
         <div role="tabpanel" class="tab-pane @statementsTabActive">
             @if (Model.Statements != null && Model.Statements.Any())
             {
-                <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a>
+                <a asp-controller="AccountStatements"
+                   asp-action="Create"
+                   asp-route-accountId="@Model.Account.Id">
+                    Upload Bank Account Statement
+                </a>
                 @foreach (var s in Model.Statements)
                 {
                     <span>#@s.Id</span>
@@ -107,7 +118,13 @@
             }
             else
             {
-                <p>No statements yet. <a asp-controller="AccountOperations" asp-action="UploadStatement">Upload Bank Account Statement</a></p>
+                <p>No statements yet. 
+                    <a asp-controller="AccountStatements" 
+                       asp-action="Create" 
+                       asp-route-accountId="@Model.Account.Id">
+                        Upload Bank Account Statement
+                    </a>
+                </p>
             }
         </div>
     </div>
