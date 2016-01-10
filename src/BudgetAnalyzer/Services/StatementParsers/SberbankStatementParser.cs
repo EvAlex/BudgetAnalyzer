@@ -9,12 +9,12 @@ namespace BudgetAnalyzer.Services.StatementParsers
 {
     public class SberbankStatementParser : IBankAccountStatementParser
     {
-        public AccountStatement[] Parse(Stream statementFile, string contentType)
+        public AccountStatement[] Parse(Stream statementFile, string contentType, string bankName)
         {
             throw new NotImplementedException();
         }
 
-        public bool CanParse(Stream statementFile, string contentType)
+        public bool CanParse(Stream statementFile, string contentType, string bankName)
         {
             throw new NotImplementedException();
         }

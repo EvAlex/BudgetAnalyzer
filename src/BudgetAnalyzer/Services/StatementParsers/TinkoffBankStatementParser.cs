@@ -9,12 +9,12 @@ namespace BudgetAnalyzer.Services.StatementParsers
 {
     public class TinkoffBankStatementParser : IBankAccountStatementParser
     {
-        public bool CanParse(Stream statementFile, string contentType)
+        public bool CanParse(Stream statementFile, string contentType, string bankName)
         {
             throw new NotImplementedException();
         }
 
-        public AccountStatement[] Parse(Stream statementFile)
+        public AccountStatement[] Parse(Stream statementFile, string contentType, string bankName)
         {
             throw new NotImplementedException();
         }

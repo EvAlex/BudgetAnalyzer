@@ -11,21 +11,13 @@ using Xunit;
 
 namespace BudgetAnalyzer.Tests.Model
 {
-    public class ApplicationDbContextTests
+    public class ApplicationDbContextTests : TestsBase
     {
-        private readonly IServiceProvider serviceProvider;
-
-        public ApplicationDbContextTests()
+        protected override void ConfigureServices(IServiceCollection services)
         {
-            var services = new ServiceCollection();
-
             services.AddEntityFramework()
-                .AddInMemoryDatabase()
-                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
-
-            //services.AddTransient<IRelationalConnection
-
-            serviceProvider = services.BuildServiceProvider();
+                   .AddInMemoryDatabase()
+                   .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
         }
 
         [Fact]

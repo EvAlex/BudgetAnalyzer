@@ -5,8 +5,8 @@ namespace BudgetAnalyzer.Services.StatementParsers
 {
     public interface IBankAccountStatementParser
     {
-        AccountStatement[] Parse(Stream statementFile, string contentType);
+        AccountStatement[] Parse(Stream statementFile, string contentType, string bankName);
 
-        bool CanParse(Stream statementFile, string contentType);
+        bool CanParse(Stream statementFile, string contentType, string bankName);
     }
 }

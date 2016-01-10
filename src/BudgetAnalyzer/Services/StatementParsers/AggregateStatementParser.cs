@@ -9,6 +9,10 @@ namespace BudgetAnalyzer.Services.StatementParsers
 {
     public class AggregateStatementParser : IBankAccountStatementParser
     {
+        public IReadOnlyCollection<IBankAccountStatementParser> Parsers
+        {
+            get { return parsers.ToList().AsReadOnly(); }
+        }
         private readonly IEnumerable<IBankAccountStatementParser> parsers;
 
         public AggregateStatementParser(IEnumerable<IBankAccountStatementParser> parsers)
@@ -16,17 +20,17 @@ namespace BudgetAnalyzer.Services.StatementParsers
             this.parsers = parsers;
         }
 
-        public AccountStatement[] Parse(Stream statementFile, string contentType)
+        public AccountStatement[] Parse(Stream statementFile, string contentType, string bankName)
         {
             AccountStatement[] res = null;
 
-            var candidates = GetRequiredParsers(statementFile, contentType);
+            var candidates = GetRequiredParsers(statementFile, contentType, bankName);
             var exceptions = new List<Exception>();
             foreach (var p in candidates)
             {
                 try
                 {
-                    res = p.Parse(statementFile, contentType);
+                    res = p.Parse(statementFile, contentType, bankName);
                     break;
                 }
                 catch (Exception ex)
@@ -42,18 +46,18 @@ namespace BudgetAnalyzer.Services.StatementParsers
             return res;
         }
 
-        public bool CanParse(Stream statementFile, string contentType)
+        public bool CanParse(Stream statementFile, string contentType, string bankName)
         {
-            return GetRequiredParsers(statementFile, contentType).Any();
+            return GetRequiredParsers(statementFile, contentType, bankName).Any();
         }
 
-        private IEnumerable<IBankAccountStatementParser> GetRequiredParsers(Stream statementFile, string contentType)
+        private IEnumerable<IBankAccountStatementParser> GetRequiredParsers(Stream statementFile, string contentType, string bankName)
         {
             return parsers.Where(p =>
             {
                 try
                 {
-                    return p.CanParse(statementFile, contentType);
+                    return p.CanParse(statementFile, contentType, bankName);
                 }
                 catch (Exception)
                 {

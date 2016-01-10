@@ -54,10 +54,7 @@ namespace BudgetAnalyzer
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<IBankAccountStatementProcessor, BankAccountStatementProcessor>();
-            services.AddTransient<IBankAccountStatementParser, SberbankStatementParser>();
-            services.AddTransient<IBankAccountStatementParser, TinkoffBankStatementParser>();
-            services.AddTransient<AggregateStatementParser>();
+            services.AddStatementProcessing();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
