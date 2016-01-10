@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BudgetAnalyzer.Models;
 using BudgetAnalyzer.Services;
+using BudgetAnalyzer.Services.StatementParsers;
 
 namespace BudgetAnalyzer
 {
@@ -54,6 +55,9 @@ namespace BudgetAnalyzer
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<IBankAccountStatementProcessor, BankAccountStatementProcessor>();
+            services.AddTransient<IBankAccountStatementParser, SberbankStatementParser>();
+            services.AddTransient<IBankAccountStatementParser, TinkoffBankStatementParser>();
+            services.AddTransient<AggregateStatementParser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
