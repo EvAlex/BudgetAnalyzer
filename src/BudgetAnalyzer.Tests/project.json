@@ -7,8 +7,11 @@
     "licenseUrl": "",
 
     "dependencies": {
+        "BudgetAnalyzer": "1.0.0-*",
         "xunit": "2.1.0",
-        "xunit.runner.dnx": "2.1.0-rc1-build204"
+        "xunit.runner.dnx": "2.1.0-rc1-build204",
+        "EntityFramework.InMemory": "7.0.0-rc1-final",
+        "EntityFramework.Relational": "7.0.0-rc1-final"
     },
     "commands": {
         "test": "xunit.runner.dnx"

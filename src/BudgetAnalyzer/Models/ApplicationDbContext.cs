@@ -7,6 +7,7 @@ using Microsoft.Data.Entity;
 using BudgetAnalyzer.Services;
 using Microsoft.AspNet.Http;
 using System.IO;
+using Microsoft.Net.Http.Headers;
 
 namespace BudgetAnalyzer.Models
 {
@@ -55,11 +56,7 @@ namespace BudgetAnalyzer.Models
 
         public async Task<IFileUpload> SaveFileUploadAsync(IFormFile file)
         {
-            string filename = file.ContentDisposition.Split(';')
-                .Select(x => x.Trim())
-                .Where(x => x.StartsWith("filename="))
-                .Select(x => x.Substring(9).Trim('"'))
-                .First();
+            string filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             using (var stream = file.OpenReadStream())
             {
                 byte[] buffer = new byte[stream.Length];

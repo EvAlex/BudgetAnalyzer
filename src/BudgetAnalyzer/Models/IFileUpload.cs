@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyzer.Models
+﻿using System;
+
+namespace BudgetAnalyzer.Models
 {
     public interface IFileUpload
     {
@@ -9,5 +11,7 @@
         string ContentType { get; }
 
         string FileName { get; }
+
+        DateTimeOffset CreatedAt { get; }
     }
 }
